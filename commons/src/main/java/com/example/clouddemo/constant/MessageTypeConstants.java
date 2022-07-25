@@ -18,7 +18,9 @@ public class MessageTypeConstants {
     public static final int NOTIFY = 400;
     public static final int ACK_FROM_SERVER = 401;
 
-
+    //Group
+    public static final int ADD_GROUP = 1001;
+    public static final int GROUP_MESSAGE = 1002;
 
     public static final int MAKE_A_FRIEND = 500;
     public static final int GOODBYE = 800;

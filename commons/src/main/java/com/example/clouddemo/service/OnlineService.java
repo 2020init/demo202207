@@ -5,4 +5,6 @@ public interface OnlineService {
     String getConnectorId(String uid);
     void online(String uid, String connectorId);
     void offline(String uid);
+    void joinGroup(String uid, long group_id);
+    void leaveGroup(String uid, long group_id);
 }

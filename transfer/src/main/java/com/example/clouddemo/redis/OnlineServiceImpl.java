@@ -31,4 +31,14 @@ public class OnlineServiceImpl implements OnlineService {
     public void offline(String uid) {
         redisTemplate.opsForHash().delete(uid);
     }
+
+    @Override
+    public void joinGroup(String uid, long group_id) {
+
+    }
+
+    @Override
+    public void leaveGroup(String uid, long group_id) {
+
+    }
 }

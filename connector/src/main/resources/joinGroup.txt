@@ -1,0 +1,38 @@
+//KEYS[1] : GROUP_ONLINE_MEMBER_SET
+//KEYS[2] : GROUP_VERSION
+//KEYS[3] : GROUP_EVENT_LIST
+//ARGV[1] : uid
+//ARGV[2] : event
+
+if redis.call('exists', KEYS[1]) == 0
+then
+    redis.call('sadd', KEYS[1], ARGV[1])
+    redis.call('set', KEYS[2], 1)
+    redis.call('rpush', KEYS[3], ARGV[2])
+    return 1
+else
+    redis.call('sadd', KEYS[1], ARGV[1])
+    redis.call('incr', KEYS[2])
+    redis.call('rpush', KEYS[3], ARGV[2])
+    a = redis.call('llen', KEYS[3])
+    if a > 500
+    then
+        redis.call('ltrim', KEYS[3], a - 500, -1)
+    end
+    return 1
+end
+
+
+
+
+String lock_key = key;
+String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+// 使用redis执行lua执行
+DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
+redisScript.setScriptText(script);
+// 设置一下返回值类型 为Long
+// 因为删除判断的时候，返回的0,给其封装为数据类型。如果不封装那么默认返回String 类型，
+// 那么返回字符串与0 会有发生错误。
+redisScript.setResultType(Long.class);
+// 第一个要是script 脚本 ，第二个需要判断的key，第三个就是key所对应的值。
+return redisTemplate.execute(redisScript, Arrays.asList(lock_key), RedisKeyGenerate.OFFLINE_MESSAGE_LOCK_THREAD_A) == 0 ? false : true;

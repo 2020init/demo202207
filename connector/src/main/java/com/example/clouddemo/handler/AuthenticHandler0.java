@@ -80,5 +80,6 @@ public class AuthenticHandler0 extends SimpleChannelInboundHandler<Message> {
             return;
         onlineService.offline(id);
         ids2clientsMap.remove(id);
+
     }
 }
