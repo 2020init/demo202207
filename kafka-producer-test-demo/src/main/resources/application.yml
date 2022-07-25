@@ -1,0 +1,16 @@
+server:
+  port: 8056
+spring:
+  application:
+    name: demo
+
+  kafka:
+    bootstrap-servers: 10.0.1.20:9092,10.0.1.21:9092,10.0.1.22:9092
+    producer: # producer 生产者
+      retries: 1000 # 重试次数
+      acks: -1 # 应答级别:多少个分区副本备份完成时向生产者发送ack确认(可选0、1、all/-1)
+      batch-size: 16384 # 批量大小
+      buffer-memory: 33554432 # 生产端缓冲区大小
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      #      value-serializer: com.itheima.demo.config.MySerializer
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer

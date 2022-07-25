@@ -1,0 +1,50 @@
+server:
+  port: 10199
+
+spring:
+  profiles:
+    active: dev # 表示开发环境
+  redis:
+    #Redis服务器地址
+    host: ${redis.host}
+    #Redis服务器连接端口
+    port: ${redis.port}
+    #连接超时时间（毫秒）
+    timeout: 1800000
+    #Redis数据库索引（默认为0）
+    database: 0
+    lettuce:
+      pool:
+        #连接池最大连接数（使用负值表示没有限制）
+        max-active: 20
+        #最大阻塞等待时间(负数表示没限制)
+        max-wait: -1
+        #连接池中的最大空闲连接
+        max-idle: 5
+        #连接池中的最小空闲连接
+        min-idle: 0
+  kafka:
+    bootstrap-servers: 10.0.1.20:9092,10.0.1.21:9092,10.0.1.22:9092
+    producer: # producer 生产者
+      retries: 1 # 重试次数
+      acks: -1 # 应答级别:多少个分区副本备份完成时向生产者发送ack确认(可选0、1、all/-1)
+      batch-size: 16384 # 批量大小
+      buffer-memory: 33554432 # 生产端缓冲区大小
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      #      value-serializer: com.itheima.demo.config.MySerializer
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+
+#  datasource:
+#    #type: com.alibaba.druid.pool.DruidDataSource            # 当前数据源操作类型
+#    # mysql驱动包 com.mysql.jdbc.Driver
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/clouddemo?useUnicode=true&characterEncoding=utf-8&useSSL=false
+#    username: root
+#    password: RootRoot1@
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
