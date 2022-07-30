@@ -3,23 +3,27 @@ package com.example.clouddemo.starter;
 import com.example.clouddemo.codec.MSGDecoder;
 import com.example.clouddemo.codec.MSGEncoder;
 import com.example.clouddemo.handler.AuthenticHandler;
-import com.example.clouddemo.loadbalance.LoadBalance;
+import com.example.clouddemo.handler.NotifyMessageHandler;
+import com.example.clouddemo.ui.Interactive;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class ClientLinkWithConnectorStarter {
-    private AuthenticHandler handler = new AuthenticHandler();
+    private AuthenticHandler authenticHandler = new AuthenticHandler();
+    private NotifyMessageHandler notifyMessageHandler = new NotifyMessageHandler();
 
-    public void start(){
-        LoadBalance lb = new LoadBalance();
-        String connector = lb.getTheBestConnector();
+    public void start(boolean openUI){
+        String connector = "localhost:10101";
+        /********************TEST******************/
+        //LoadBalance lb = new LoadBalance();
+        //String connector = lb.getTheBestConnector();
+
         String host = connector.split(":")[0];
         int port = Integer.parseInt(connector.split(":")[1]);
 
@@ -37,15 +41,15 @@ public class ClientLinkWithConnectorStarter {
 //
 //                            //inbound up to down
                         p.addLast("MSGDecoder", new MSGDecoder());
-                        p.addLast(handler);
-
-
+                        p.addLast(authenticHandler);
+                        p.addLast(notifyMessageHandler);
                     }
                 })
                 .connect(host, port)
                 .addListener((ChannelFutureListener) channelFuture -> {
                     if(channelFuture.isSuccess()){
 //                        log.info("connect to connector successfully");
+
                     }else{
 //                        log.error("connect to connector failed");
                         // reconnect(group, config);
@@ -57,6 +61,18 @@ public class ClientLinkWithConnectorStarter {
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             e.printStackTrace();
         }
+
+
+        if(openUI){
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Interactive interactive = new Interactive(authenticHandler.getContext(), Long.parseLong(authenticHandler.getUid()));
+            new Thread(interactive).start();
+        }
+
 
     }
 }

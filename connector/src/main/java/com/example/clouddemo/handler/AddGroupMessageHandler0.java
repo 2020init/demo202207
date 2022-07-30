@@ -9,17 +9,18 @@ import com.google.protobuf.Message;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
 @AllArgsConstructor
+@Slf4j
 public class AddGroupMessageHandler0 extends SimpleChannelInboundHandler<Message> {
-    private Set<Long> addGroupsSet = new HashSet<>();//因为是单线程使用, 不必关心线程安全问题
+    //每个连接都会创建一个自己的AddGroupMessageHandler0, 所以是单线程使用
+    private Set<Long> addGroupsSet;//因为是单线程使用, 不必关心线程安全问题
     private Long ownerUid;
+    //线程私有的
     private Map<Long, Group> groupMap;
 
     @Override
@@ -33,17 +34,15 @@ public class AddGroupMessageHandler0 extends SimpleChannelInboundHandler<Message
         long group_id = Long.parseLong(message.getToUid());
         long uid = Long.parseLong(message.getFromUid());
         GroupMember groupMember = new GroupMember(uid, ctx);
-        Group group = groupMap.computeIfAbsent(group_id, new Function<Long, Group>() {
-            @Override
-            public Group apply(Long aLong) {
-                return new Group(group_id);
-            }
-        });
+        //获取组
+        Group group = Group.getOrDefaultGroupByGroupId(group_id);
+        groupMap.put(group_id, group);
+        log.info("获取组 " + group_id);
+        //将自己加入组
         group.putOnlineMember(uid, groupMember);
         ownerUid = uid;
         addGroupsSet.add(group_id);
-
-
+        log.info("将" + uid + ",加入组" + group_id);
     }
 
     @Override
@@ -53,6 +52,7 @@ public class AddGroupMessageHandler0 extends SimpleChannelInboundHandler<Message
         //移除用户
         for(Long group_id : addGroupsSet){
             groupMap.get(group_id).deleteOnlineMember(ownerUid);
+            log.info("从组" + group_id + "中移除" + ownerUid);
         }
     }
 }

@@ -14,7 +14,8 @@ public class ConnectorServiceController {
 
     @GetMapping("/get/connectors/cluster")
     public String getConnectorsCluster(){
-        return connectorsCluster;
+        return "localhost:10101";
+        //return connectorsCluster;
     }
 
 }

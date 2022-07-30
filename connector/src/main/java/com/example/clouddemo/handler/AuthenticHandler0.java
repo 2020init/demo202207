@@ -62,6 +62,7 @@ public class AuthenticHandler0 extends SimpleChannelInboundHandler<Message> {
 
         //set a attribute to remember its id
         channelHandlerContext.channel().attr(AttributeKeyConstant.CHANNEL_ID).set(id);
+        log.info("auth success " + id);
     }
 
     @Override
@@ -78,6 +79,7 @@ public class AuthenticHandler0 extends SimpleChannelInboundHandler<Message> {
         String id = ctx.channel().attr(AttributeKeyConstant.CHANNEL_ID).get();
         if(id == null)
             return;
+        log.info("移除" + id + "的ctx");
         onlineService.offline(id);
         ids2clientsMap.remove(id);
 

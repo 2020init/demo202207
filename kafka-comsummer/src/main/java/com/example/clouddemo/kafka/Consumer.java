@@ -92,7 +92,7 @@ public class Consumer implements Runnable{
         JSONObject jb = new JSONObject();
         jb.put("gs", message.getGlobalSequence() + "");
         jb.put("ss", message.getSessionSequence() + "");
-        //jb.put("tp", message.getType());
+        jb.put("tp", message.getType());
         jb.put("ts", message.getTimestamp());
         jb.put("fu", message.getFromUid());
         jb.put("tu", message.getToUid());

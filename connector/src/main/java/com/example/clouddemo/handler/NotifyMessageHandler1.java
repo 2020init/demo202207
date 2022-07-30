@@ -7,8 +7,10 @@ import com.google.protobuf.Message;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
+@Slf4j
 public class NotifyMessageHandler1 extends SimpleChannelInboundHandler<Message> {
     private SimpleMap ids2clientsMap;
 
@@ -19,6 +21,7 @@ public class NotifyMessageHandler1 extends SimpleChannelInboundHandler<Message> 
             ctx.fireChannelRead(msg);
             return;
         }
+        log.info("来自transfer的notify: " + message.getGlobalSequence());
         //check whether the client is on here
         String toUid = message.getToUid();
         ChannelHandlerContext clientCtx = ids2clientsMap.get(toUid);
@@ -35,9 +38,11 @@ public class NotifyMessageHandler1 extends SimpleChannelInboundHandler<Message> 
                     .setSessionSequence(message.getSessionSequence())
                     .build();
             ctx.writeAndFlush(ack);
+            log.info("toUid = " + toUid + " 没有在本connector上");
             return;
         }
         clientCtx.writeAndFlush(message);
+        log.info("将消息投递给toUid" + toUid);
 
     }
 }

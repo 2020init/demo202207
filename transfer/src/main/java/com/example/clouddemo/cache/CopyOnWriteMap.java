@@ -22,6 +22,14 @@ public class CopyOnWriteMap {
         return map.get(key).getCtx();
     }
 
+    public List<ChannelHandlerContext> getList(){
+        List<ChannelHandlerContext> res = new ArrayList<>();
+        for(VChannel vChannel : vChannelList){
+            res.add(vChannel.getCtx());
+        }
+        return res;
+    }
+
     public void put(String key, ChannelHandlerContext ctx, double score){
         if(key == null)
             return;

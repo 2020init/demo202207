@@ -9,6 +9,7 @@ import com.example.clouddemo.kafka.AckSender;
 import com.example.clouddemo.kafka.MessageProducer;
 import com.example.clouddemo.netty.handler.AckMessageHandler;
 import com.example.clouddemo.netty.handler.GreetingHandler;
+import com.example.clouddemo.netty.handler.GroupMessageHandler;
 import com.example.clouddemo.netty.handler.NotifyMessageHandler;
 import com.example.clouddemo.protobuf.ChannelMessage;
 import com.example.clouddemo.service.OnlineService;
@@ -88,6 +89,7 @@ public class TransferStarter implements ApplicationRunner {
                         pipeline.addLast(new GreetingHandler(transferBootstrap, ids2connectorsMap));
                         pipeline.addLast(new NotifyMessageHandler(ids2connectorsMap, onlineService, notifyMessageBlockingQueue));
                         pipeline.addLast(new AckMessageHandler(ids2connectorsMap, onlineService));
+                        pipeline.addLast(new GroupMessageHandler(notifyMessageBlockingQueue, ids2connectorsMap));
 
                     }
                 });

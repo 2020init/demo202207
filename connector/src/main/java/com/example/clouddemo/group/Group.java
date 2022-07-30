@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
 @Data
 public class Group {
@@ -70,4 +72,21 @@ public class Group {
     public int hashCode() {
         return Objects.hash(groupId);
     }
+
+    //内聚
+    private static final Map<Long, Group> groupMap = new ConcurrentHashMap<>();
+
+    public static Group getOrDefaultGroupByGroupId(long groupId){
+        return groupMap.computeIfAbsent(groupId, new Function<Long, Group>() {
+            @Override
+            public Group apply(Long aLong) {
+                return new Group(aLong);
+            }
+        });
+    }
+
+    public static Group getGroupByGroupId(long groupId){
+        return groupMap.get(groupId);
+    }
+
 }

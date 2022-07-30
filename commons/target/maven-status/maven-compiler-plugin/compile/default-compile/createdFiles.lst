@@ -1,0 +1,16 @@
+com\example\clouddemo\codec\MSGDecoder.class
+com\example\clouddemo\constant\RedisKeyConstants.class
+com\example\clouddemo\constant\AttributeKeyConstant.class
+com\example\clouddemo\protobuf\ChannelMessage$Message$Builder.class
+com\example\clouddemo\protobuf\ChannelMessage$Message.class
+com\example\clouddemo\net\NetAddress.class
+com\example\clouddemo\protobuf\ChannelMessage$MessageOrBuilder.class
+com\example\clouddemo\service\FriendShipService.class
+com\example\clouddemo\constant\MessageTypeConstants.class
+com\example\clouddemo\service\OnlineService.class
+com\example\clouddemo\protobuf\ChannelMessage$1.class
+com\example\clouddemo\service\TokenService.class
+com\example\clouddemo\codec\MSGEncoder.class
+com\example\clouddemo\constant\MessageKeyConstants.class
+com\example\clouddemo\protobuf\ChannelMessage$Message$1.class
+com\example\clouddemo\protobuf\ChannelMessage.class

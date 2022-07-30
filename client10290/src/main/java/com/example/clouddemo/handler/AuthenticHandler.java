@@ -9,9 +9,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 
-@ChannelHandler.Sharable
 public class AuthenticHandler extends SimpleChannelInboundHandler<Message> {
-    private static ChannelHandlerContext context;
+    private ChannelHandlerContext context;
+    private String uid = ClientBootstrap.getUuid();
+    private boolean isAddGroup = false;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
@@ -25,13 +26,23 @@ public class AuthenticHandler extends SimpleChannelInboundHandler<Message> {
         }
 
         System.out.println("receive GREETING message from server " + message.getFromUid());
+
+        if(!isAddGroup){
+            ChannelMessage.Message addGroupMsg = ChannelMessage.Message.newBuilder()
+                    .setFromUid(uid)
+                    .setToUid("1")
+                    .setType(MessageTypeConstants.ADD_GROUP)
+                    .build();
+            ctx.writeAndFlush(addGroupMsg);
+            isAddGroup = true;
+        }
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         context = ctx;
         ChannelMessage.Message message = ChannelMessage.Message.newBuilder()
-                .setFromUid(ClientBootstrap.UUID)
+                .setFromUid(uid)
                 .setBody(ClientBootstrap.test_token)//token
                 .setTimestamp(System.currentTimeMillis())
                 .setType(MessageTypeConstants.AUTH)
@@ -44,11 +55,10 @@ public class AuthenticHandler extends SimpleChannelInboundHandler<Message> {
         context = null;
     }
 
-    public static void write(){
-        if(context == null){
-            return;
-        }
-
-
+    public ChannelHandlerContext getContext(){
+        return context;
+    }
+    public String getUid(){
+        return uid;
     }
 }

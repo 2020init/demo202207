@@ -5,9 +5,8 @@ import com.example.clouddemo.cache.SimpleMap;
 import com.example.clouddemo.codec.MSGDecoder;
 import com.example.clouddemo.codec.MSGEncoder;
 import com.example.clouddemo.config.ConnectorBootstrap;
-import com.example.clouddemo.handler.AckMessageHandler0;
-import com.example.clouddemo.handler.AuthenticHandler0;
-import com.example.clouddemo.handler.RequestMessageHandler0;
+import com.example.clouddemo.group.Group;
+import com.example.clouddemo.handler.*;
 import com.example.clouddemo.service.OnlineService;
 import com.example.clouddemo.service.TokenService;
 import io.netty.bootstrap.ServerBootstrap;
@@ -24,6 +23,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -35,7 +37,7 @@ public class ConnectorLinkWithClientStarter10101 implements ApplicationRunner {
     private static final int port = 10101;
     @Autowired
     private ConnectorBootstrap connectorBootstrap;
-    @Autowired
+    @Resource(name = "tokenServiceTestImpl")
     private TokenService tokenService;
     @Autowired
     private OnlineService onlineService;
@@ -69,6 +71,10 @@ public class ConnectorLinkWithClientStarter10101 implements ApplicationRunner {
                         pipeline.addLast(new AuthenticHandler0(ids2clientsMap, tokenService, onlineService));
                         pipeline.addLast(new AckMessageHandler0(ids2transfersMap));
                         pipeline.addLast(new RequestMessageHandler0(ids2transfersMap));
+
+                        Map<Long, Group> groupMap = new HashMap<>();
+                        pipeline.addLast(new GroupMessageHandler0(groupMap, ids2transfersMap));
+                        pipeline.addLast(new AddGroupMessageHandler0(new HashSet<>(), -1L, groupMap));
 
                     }
                 });

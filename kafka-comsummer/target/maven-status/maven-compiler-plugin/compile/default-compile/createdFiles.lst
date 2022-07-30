@@ -1,0 +1,9 @@
+com\example\clouddemo\ConsumerStarter.class
+com\example\clouddemo\kafka\config\RedisConfig.class
+com\example\clouddemo\mybatis\service\MessageServiceImpl.class
+com\example\clouddemo\kafka\config\KafkaConfig.class
+com\example\clouddemo\mybatis\utils\SqlSessionUtils.class
+com\example\clouddemo\mybatis\service\MessageService.class
+com\example\clouddemo\mybatis\mapper\MessageMapper.class
+com\example\clouddemo\kafka\Consumer.class
+com\example\clouddemo\Main.class

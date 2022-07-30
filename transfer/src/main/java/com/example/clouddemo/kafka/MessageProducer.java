@@ -58,6 +58,7 @@ public class MessageProducer implements Runnable{
             try {
                 ChannelMessage.Message message = NotifyMessageBlockingQueue.take();
                 kafkaTemplate.send(topic, message.getToUid(), message.toByteArray());
+                log.info("kafka 生产者发送 " + message.getGlobalSequence() + " 到broker");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

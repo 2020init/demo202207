@@ -16,6 +16,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public boolean checkTokenAndUid(String uid, String token) {
+
         String key = RedisKeyConstants.TokenIdKeyGenerate(token, uid);
         boolean ans = redisTemplate.opsForValue().get(key) != null;
         if(ans){

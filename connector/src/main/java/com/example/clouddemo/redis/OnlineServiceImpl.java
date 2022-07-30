@@ -32,7 +32,7 @@ public class OnlineServiceImpl implements OnlineService {
 
     @Override
     public void offline(String uid) {
-        redisTemplate.opsForHash().delete(uid);
+        redisTemplate.opsForHash().delete(RedisKeyConstants.ONLINE, uid);
     }
 
     @Override

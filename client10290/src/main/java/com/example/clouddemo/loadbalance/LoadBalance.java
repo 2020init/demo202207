@@ -13,7 +13,12 @@ import java.util.concurrent.CompletableFuture;
 @Data
 public class LoadBalance {
     private String[] connectors;
-    private String url = "http://10.0.1.129:10699/get/connectors/cluster";
+    private String url = "http://localhost:10699/get/connectors/cluster";
+
+    public static void main(String[] args) {
+        LoadBalance lb = new LoadBalance();
+        lb.getTheBestConnector();
+    }
 
 
     public String getTheBestConnector(){
@@ -28,7 +33,7 @@ public class LoadBalance {
             Cost cost = new Cost();
             cost.url = connectors[i];
             long t0 = System.currentTimeMillis();
-            String res = httpUtils.httpGet(connectors[i].split(":")[0] + "/get/onlinenumber");
+            String res = httpUtils.httpGet("http://" + connectors[i].split(":")[0] + "/get/onlinenumber");
             long t1 = System.currentTimeMillis();
             time.add(t1 - t0);
             cost.timeCost = t1 - t0;

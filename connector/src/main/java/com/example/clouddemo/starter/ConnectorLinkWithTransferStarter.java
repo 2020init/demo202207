@@ -5,6 +5,7 @@ import com.example.clouddemo.codec.MSGDecoder;
 import com.example.clouddemo.codec.MSGEncoder;
 import com.example.clouddemo.config.ConnectorBootstrap;
 import com.example.clouddemo.handler.AckMessageHandler1;
+import com.example.clouddemo.handler.GroupMessageHandler1;
 import com.example.clouddemo.handler.NotifyMessageHandler1;
 import com.example.clouddemo.net.NetAddress;
 import com.example.clouddemo.handler.GreetingHandler1;
@@ -69,6 +70,7 @@ public class ConnectorLinkWithTransferStarter implements ApplicationRunner {
                             p.addLast(new GreetingHandler1(ids2transfersMap));
                             p.addLast(new AckMessageHandler1(ids2clientsMap));
                             p.addLast(new NotifyMessageHandler1(ids2clientsMap));
+                            p.addLast(new GroupMessageHandler1());
                         }
                     })
                     .connect(host, port)
